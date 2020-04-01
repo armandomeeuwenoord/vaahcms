@@ -2,7 +2,7 @@ import GlobalComponents from '../../vaahvue/helpers/GlobalComponents';
 import ListLargeView from './partials/ListLargeView';
 import ListSmallView from './partials/ListSmallView';
 
-let namespace = 'registrations';
+let namespace = 'permission';
 
 export default {
     computed:{

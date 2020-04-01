@@ -20,6 +20,22 @@ class PermissionController extends Controller
         $this->theme = vh_get_backend_theme();
     }
 
+    public function getAssets(Request $request)
+    {
+
+        $data['country_calling_code'] = vh_get_country_list();
+        $data['country'] = vh_get_country_list();
+        $data['country_code'] = vh_get_country_list();
+        $data['registration_statuses'] = vh_registration_statuses();
+        $data['bulk_actions'] = vh_general_bulk_actions();
+        $data['name_titles'] = vh_name_titles();
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return response()->json($response);
+    }
+
     //----------------------------------------------------------
     public function index()
     {
@@ -45,7 +61,7 @@ class PermissionController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function getDetails(Request $request, $id)
+    public function getItem(Request $request, $id)
     {
 
         $item = Permission::where('id', $id)->withTrashed()->first();
