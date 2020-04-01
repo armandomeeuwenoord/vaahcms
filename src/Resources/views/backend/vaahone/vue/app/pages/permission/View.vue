@@ -66,11 +66,27 @@
 
             <!--content-->
             <div class="card-content">
+                <div class="block"  v-if="item">
 
-                <div class="block" >
+                    <b-table
+                            class="is-full-width"
+                            :striped="true"
+                            :data="item"
+                            :mobile-cards="true">
+
+                        <template slot-scope="props">
+
+                            <b-table-column field="type" label="">
+                                {{props.row.name}}
+                            </b-table-column>
+
+                            <b-table-column field="description" label="">
+                               :   {{props.row.value}}
+                            </b-table-column>
+                        </template>
+                    </b-table>
 
 
-                    content
 
                 </div>
             </div>
