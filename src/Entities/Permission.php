@@ -146,6 +146,47 @@ class Permission extends Model {
         return $result;
     }
     //-------------------------------------------------
+    public static function getList($request)
+    {
+
+        if(isset($request->recount) && $request->recount == true)
+        {
+            Permission::syncPermissionsWithRoles();
+            Permission::recountRelations();
+        }
+
+        if(isset($request->sort_by) && !is_null($request->sort_by))
+        {
+
+            if($request->sort_by == 'deleted_at')
+            {
+                $list = Permission::onlyTrashed();
+            } else
+            {
+                $list = Permission::orderBy($request->sort_by, $request->sort_type);
+            }
+
+        } else
+        {
+            $list = Permission::orderBy('created_at', 'DESC');
+        }
+
+        if(isset($request->sort_by))
+        {
+            $list->where(function ($q) use ($request){
+                $q->where('name', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
+            });
+        }
+
+        $data['list'] = $list->paginate(config('vaahcms.per_page'));
+
+        $response['status'] = 'success';
+        $response['data'] = $data;
+
+        return $response;
+    }
+    //-------------------------------------------------
     public function getFormElement($column, $value=null)
     {
 
@@ -326,6 +367,24 @@ class Permission extends Model {
 
         return $response;
 
+
+    }
+    //-------------------------------------------------
+    public static function changeStatus($request)
+    {
+        $permission = static::find($request->id);
+        if($permission->is_active == 1){
+            $permission->is_active = 0;
+        }else{
+            $permission->is_active = 1;
+        }
+        $permission->save();
+
+        $response = static::getList($request->query_string);
+
+        $response['messages'][] = 'Status is changed.';
+
+        return $response;
 
     }
     //-------------------------------------------------

@@ -397,6 +397,9 @@ Route::group(
         Route::post('/create', 'PermissionController@postCreate')
             ->name('backend.vaah.permission.create');
         //---------------------------------------------------------
+        Route::post('/changeStatus', 'PermissionController@changeStatus')
+            ->name('backend.vaah.permission.changeStatus');
+        //---------------------------------------------------------
         Route::any('/list', 'PermissionController@getList')
             ->name('backend.vaah.permission.list');
         //---------------------------------------------------------

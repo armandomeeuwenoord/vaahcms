@@ -24,8 +24,8 @@
                 </b-table-column>
 
                 <b-table-column field="status" label="Is Active">
-                    <b-button v-if="props.row.is_active === 1" rounded size="is-small" type="is-primary" @click="changeStatus">Yes</b-button>
-                    <b-button v-else rounded size="is-small" type="is-danger" @click="changeStatus">No</b-button>
+                    <b-button v-if="props.row.is_active === 1" rounded size="is-small" type="is-primary" @click="changeStatus(props.row.id)">Yes</b-button>
+                    <b-button v-else rounded size="is-small" type="is-danger" @click="changeStatus(props.row.id)">No</b-button>
 <!--                    <span v-if="props.row.is_active === 1" class="tag is-primary">-->
 <!--                        Yes-->
 <!--                    </span>-->
