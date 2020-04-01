@@ -412,7 +412,7 @@ Route::group(
         Route::post('/store/{uuid}', 'PermissionController@postStore')
             ->name('backend.vaah.permission.store');
         //---------------------------------------------------------
-        Route::post('/actions/{action_name}', 'PermissionController@postActions')
+        Route::post('/actions', 'PermissionController@actions')
             ->name('backend.vaah.permission.actions');
         //---------------------------------------------------------
     });
