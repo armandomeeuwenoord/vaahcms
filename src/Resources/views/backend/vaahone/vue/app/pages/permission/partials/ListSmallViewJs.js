@@ -57,7 +57,12 @@ export default {
         setActiveItem: function (item) {
             this.update('active_item', item);
             this.$router.push({name: 'perm.view', params:{id:item.id}})
-        }
+        },
+        //---------------------------------------------------------------------
+        getRole: function (item) {
+            this.update('active_item', item);
+            this.$router.push({name: 'perm.role', params:{id:item.id}})
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }

@@ -69,7 +69,7 @@ export default {
 
             this.params = {};
 
-            let url = this.ajax_url+'/item/'+this.id;
+            let url = this.ajax_url+'/role/'+this.id;
             this.$vaah.ajax(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
@@ -82,6 +82,7 @@ export default {
             {
                 this.update('active_item', data);
             }
+
         },
         //---------------------------------------------------------------------
 
