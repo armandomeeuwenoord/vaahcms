@@ -75,8 +75,16 @@ export default {
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
 
+            console.log(data);
+
+            data.forEach(function (item) {
+                item.name =  item.name.charAt(0).toUpperCase() + item.name.slice(1);
+                item.name =  item.name.replace('_',' ');
+            });
+
             this.$Progress.finish();
             this.is_content_loading = false;
+
 
             if(data)
             {
