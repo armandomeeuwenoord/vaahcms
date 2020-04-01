@@ -1,4 +1,4 @@
-<script src="./ViewJs.js"></script>
+<script src="./ViewRoleJs.js"></script>
 <template>
     <div class="column" v-if="page.assets">
         <div class="block" v-if="is_content_loading">
@@ -8,10 +8,9 @@
         <div class="card" v-else>
             <!--header-->
             <header class="card-header">
-
-                <div v-if="item && item[0]" class="card-header-title">
-                    <span>#{{item[0].value}} / </span>
-                    <span>{{item[1].value}}</span>
+                <div v-if="item && item.permission" class="card-header-title">
+                    <span>#{{item.permission.id}} / </span>
+                    <span>{{item.permission.name}}</span>
                 </div>
 
                 <div class="card-header-buttons">

@@ -23,10 +23,11 @@
                     {{ props.row.slug }}
                 </b-table-column>
 
-                <b-table-column field="status" label="Status">
-                                                    <span class="tag">
-                                                        {{ props.row.is_active }}
-                                                    </span>
+                <b-table-column field="created_at" label="Roles" >
+                    <b-button rounded size="is-small"
+                              type="is-primary" @click="getRole(props.row)">
+                        {{ props.row.count_roles }}
+                    </b-button>
                 </b-table-column>
 
 

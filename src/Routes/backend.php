@@ -406,6 +406,9 @@ Route::group(
         Route::any('/item/{id}', 'PermissionController@getItem')
             ->name('backend.vaah.permission.item');
         //---------------------------------------------------------
+        Route::any('/role/{id}', 'PermissionController@getRoles')
+            ->name('backend.vaah.permission.role');
+        //---------------------------------------------------------
         Route::post('/store/{uuid}', 'PermissionController@postStore')
             ->name('backend.vaah.permission.store');
         //---------------------------------------------------------
