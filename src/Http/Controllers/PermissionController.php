@@ -76,43 +76,15 @@ class PermissionController extends Controller
     public function getList(Request $request)
     {
 
-        if($request->has('recount') && $request->get('recount') == true)
-        {
-            Permission::syncPermissionsWithRoles();
-            Permission::recountRelations();
-        }
-
-        if($request->has("sort_by") && !is_null($request->sort_by))
-        {
-
-            if($request->sort_by == 'deleted_at')
-            {
-                $list = Permission::onlyTrashed();
-            } else
-            {
-                $list = Permission::orderBy($request->sort_by, $request->sort_type);
-            }
-
-        } else
-        {
-            $list = Permission::orderBy('created_at', 'DESC');
-        }
-
-        if($request->has("q"))
-        {
-            $list->where(function ($q) use ($request){
-                $q->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
-            });
-        }
-
-        $data['list'] = $list->paginate(config('vaahcms.per_page'));
-
-        $response['status'] = 'success';
-        $response['data'] = $data;
-
+        $response = Permission::getList($request);
         return response()->json($response);
 
+    }
+    //----------------------------------------------------------
+    public function changeStatus(Request $request)
+    {
+        $response = Permission::changeStatus($request);
+        return response()->json($response);
     }
     //----------------------------------------------------------
     public function actions(Request $request)
