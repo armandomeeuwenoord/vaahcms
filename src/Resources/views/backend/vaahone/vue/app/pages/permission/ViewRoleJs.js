@@ -62,11 +62,12 @@ export default {
             this.getItem();
         },
         //---------------------------------------------------------------------
-        getItem: function () {
+        getItem: function (action = false) {
 
             this.$Progress.start();
-            this.is_content_loading = true;
-
+            if(!action){
+                this.is_content_loading = true;
+            }
             this.params = {};
 
             let url = this.ajax_url+'/role/'+this.id;
@@ -83,6 +84,58 @@ export default {
                 this.update('active_item', data);
             }
 
+        },
+        //---------------------------------------------------------------------
+        changePermission: function (item) {
+
+            let params = {
+                id : this.id,
+                role_id : item.id,
+                query_string : this.page.query_string,
+            };
+
+            var data = {};
+
+            if(item.pivot.is_active)
+            {
+                data.is_active = 0;
+            } else
+            {
+                data.is_active = 1;
+            }
+
+            this.actions(false, 'toggle_role_active_status', params, data)
+
+        },
+
+        //---------------------------------------------------------------------
+        actions: function (e, action, inputs, data) {
+            if(e)
+            {
+                e.preventDefault();
+            }
+
+            var url = this.ajax_url+"/actions";
+            var params = {
+                action: action,
+                inputs: inputs,
+                data: data,
+            };
+
+            this.$vaah.ajax(url, params, this.actionsAfter);
+        },
+        //---------------------------------------------------------------------
+        actionsAfter: function (data,res) {
+            this.getItem(true);
+            this.update('is_list_loading', false);
+            this.update('list', data.list);
+
+            if(data.list.total === 0)
+            {
+                this.update('list_is_empty', true);
+            }else{
+                this.update('list_is_empty', false);
+            }
         },
         //---------------------------------------------------------------------
 

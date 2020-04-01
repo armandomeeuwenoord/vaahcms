@@ -104,7 +104,7 @@ class PermissionController extends Controller
         }
 
         $response['status'] = 'success';
-        $response['messages'][] = 'Action was successful';
+
 
         $inputs = $request->all();
 
@@ -115,18 +115,21 @@ class PermissionController extends Controller
             case 'bulk_change_status':
 
                 $response = Permission::bulkStatusChange($request);
+                $response['messages'][] = 'Action was successful';
 
                 break;
             //------------------------------------
             case 'bulk_delete':
 
                 $response = Permission::bulkDelete($request);
+                $response['messages'][] = 'Action was successful';
 
                 break;
             //------------------------------------
             case 'bulk_restore':
 
                 $response = Permission::bulkRestore($request);
+                $response['messages'][] = 'Action was successful';
 
                 break;
 
@@ -167,7 +170,7 @@ class PermissionController extends Controller
                     $item->roles()->updateExistingPivot($inputs['inputs']['role_id'], array('is_active' => $inputs['data']['is_active']));
                     Permission::recountRelations();
                     Role::recountRelations();
-                    $response['messages'] = [];
+                    $response = Permission::getList($request->query_string);
                 }
 
                 break;

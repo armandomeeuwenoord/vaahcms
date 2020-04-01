@@ -17,36 +17,6 @@
 
                     <div class="field has-addons is-pulled-right">
                         <p class="control">
-                            <b-button icon-left="edit"
-                                      :loading="is_btn_loading"
-                                      @click="create('save')">
-                                Save
-                            </b-button>
-                        </p>
-
-                        <p class="control">
-
-
-                            <b-dropdown aria-role="list" position="is-bottom-left">
-                                <button class="button" slot="trigger">
-                                    <b-icon icon="caret-down"></b-icon>
-                                </button>
-
-                                <b-dropdown-item aria-role="listitem">
-                                    <b-icon icon="check"></b-icon>
-                                    Save & Close
-                                </b-dropdown-item>
-                                <b-dropdown-item aria-role="listitem">
-                                    <b-icon icon="plus"></b-icon>
-                                    Save & New
-                                </b-dropdown-item>
-
-                            </b-dropdown>
-
-
-                        </p>
-
-                        <p class="control">
                             <b-button tag="router-link"
                                       :to="{name: 'perm.list'}"
                                       icon-left="times">
@@ -66,10 +36,31 @@
             <!--content-->
             <div class="card-content">
 
-                <div class="block" >
+                <div class="block"  v-if="item && item.list">
 
 
-                    content
+                    <b-table :data="item.list.data"
+                             :hoverable="true"
+                    >
+
+                        <template slot-scope="props">
+                            <b-table-column field="id" label="Role" >
+                                {{ props.row.name }}
+                            </b-table-column>
+
+                            <b-table-column field="name" class="has-text-centered" label="Has Permission" numeric >
+                                <b-button v-if="props.row.pivot.is_active === 1" rounded size="is-small"
+                                          type="is-success" @click="changePermission(props.row)">
+                                    Yes
+                                </b-button>
+                                <b-button v-else rounded size="is-small" type="is-danger"
+                                          @click="changePermission(props.row)">
+                                    No
+                                </b-button>
+                            </b-table-column>
+                        </template>
+
+                    </b-table>
 
                 </div>
             </div>
