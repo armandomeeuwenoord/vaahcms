@@ -18,6 +18,7 @@ export default {
         return {
             is_btn_loading: false,
             is_content_loading: false,
+            items: null,
         }
     },
     watch: {
@@ -81,7 +82,8 @@ export default {
 
             if(data)
             {
-                this.update('active_item', data);
+                this.items = data;
+                this.update('active_item', data.permission);
             }
 
         },

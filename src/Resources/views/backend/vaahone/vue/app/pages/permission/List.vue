@@ -75,10 +75,10 @@
                                                         - Select Status -
                                                     </option>
                                                     <option value=1>
-                                                        - Active -
+                                                        Active
                                                     </option>
                                                     <option value=0>
-                                                        - Not active -
+                                                        Not active
                                                     </option>
                                                 </b-select>
 
@@ -150,7 +150,7 @@
                                         <div class="level-item">
 
                                             <b-field label="">
-                                                <b-select placeholder="Select a status"
+                                                <b-select placeholder="- Select a status -"
                                                           v-model="query_string.status"
                                                           @input="getList()"
                                                 >
@@ -158,10 +158,10 @@
                                                         - Select a status -
                                                     </option>
                                                     <option value=1>
-                                                        - Active -
+                                                        Active
                                                     </option>
                                                     <option value=0>
-                                                        - Not active -
+                                                        Not active
                                                     </option>
                                                 </b-select>
                                             </b-field>

@@ -415,4 +415,7 @@ Route::group(
         Route::post('/actions', 'PermissionController@actions')
             ->name('backend.vaah.permission.actions');
         //---------------------------------------------------------
+        Route::post('/actions/{action_name}', 'PermissionController@postActions')
+            ->name('backend.vaah.registrations.actions');
+        //---------------------------------------------------------
     });

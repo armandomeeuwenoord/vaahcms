@@ -205,7 +205,6 @@ export default {
             }
 
             if(this.page.bulk_action.action == 'bulk-change-status'){
-                console.log(123);
                 if(!this.page.bulk_action.data.status){
                     this.$vaah.toastErrors(['Select a status']);
                     return false;
@@ -223,21 +222,25 @@ export default {
             let ids = this.$vaah.pluckFromObject(this.page.bulk_action.selected_items, 'id');
 
             let params = {
-                action: this.page.bulk_action.action,
                 inputs: ids,
                 data: this.page.bulk_action.data
             };
 
             console.log('--->params', params);
 
-            let url = this.ajax_url+'/actions';
+            let url = this.ajax_url+'/actions/'+this.page.bulk_action.action;
             this.$vaah.ajax(url, params, this.actionsAfter);
         },
         //---------------------------------------------------------------------
         actionsAfter: function (data, res) {
+            if(data)
+            {
                 this.resetBulkAction();
                 this.getList();
+            } else
+            {
                 this.$Progress.finish();
+            }
 
         },
         //---------------------------------------------------------------------

@@ -17,7 +17,9 @@ export default {
         assets_is_fetching: false,
         list: null,
         list_is_empty: false,
-        active_item: null,
+        active_item: {
+            id:null,
+        },
         filters: {
             q: null,
         },

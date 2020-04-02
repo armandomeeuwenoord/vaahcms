@@ -44,9 +44,9 @@ export default {
         //---------------------------------------------------------------------
         setRowClass: function(row, index)
         {
-
             if(this.page.active_item && row.id == this.page.active_item.id)
             {
+                console.log(this.page.active_item);
                 return 'is-selected';
             }
 

@@ -1,4 +1,7 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
+import TableTrView from '../../vaahvue/reusable/TableTrView'
+import TableTrStatus from './partials/TableTrStatus'
+
 
 let namespace = 'permission';
 
@@ -12,6 +15,8 @@ export default {
     },
     components:{
         ...GlobalComponents,
+        TableTrView,
+        TableTrStatus,
     },
     data()
     {
@@ -79,12 +84,23 @@ export default {
 
             console.log(data);
 
+            let items = {};
+
             data.forEach(function (item) {
-                item.name =  item.name.charAt(0).toUpperCase() + item.name.slice(1);
-                item.name =  item.name.replace('_',' ');
+
+                if(item.name === 'is_active'){
+                    if(item.value == 1){
+                        items[item.name] = 'Yes';
+                    }else{
+                        items[item.name] = 'No';
+                    }
+                }else{
+                    items[item.name] = item.value;
+                }
+
             });
 
-            this.title = data[1].value;
+            this.title = items.name;
 
             this.$Progress.finish();
             this.is_content_loading = false;
@@ -92,7 +108,7 @@ export default {
 
             if(data)
             {
-                this.update('active_item', data);
+                this.update('active_item', items);
             }
         },
         //---------------------------------------------------------------------
@@ -104,6 +120,55 @@ export default {
             }else{
                 this.is_editable = true;
             }
+        },
+        //---------------------------------------------------------------------
+        actions: function (action) {
+
+            console.log('--->action', action);
+
+            this.$Progress.start();
+            this.page.bulk_action.action = action;
+            this.update('bulk_action', this.page.bulk_action);
+            let params = {
+                inputs: [this.item.id],
+                data: null
+            };
+
+            let url = this.ajax_url+'/actions/'+this.page.bulk_action.action;
+            this.$vaah.ajax(url, params, this.actionsAfter);
+
+        },
+        //---------------------------------------------------------------------
+        actionsAfter: function (data, res) {
+            let action = this.page.bulk_action.action;
+            if(data)
+            {
+                this.resetBulkAction();
+                this.$root.$emit('eReloadList');
+
+                if(action == 'bulk-delete')
+                {
+                    this.$router.push({name: 'perm.list'});
+                } else
+                {
+                    this.getItem();
+                }
+
+            } else
+            {
+                this.$Progress.finish();
+            }
+        },
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        resetBulkAction: function()
+        {
+            this.page.bulk_action = {
+                selected_items: [],
+                data: {},
+                action: "",
+            };
+            this.update('bulk_action', this.page.bulk_action);
         },
         //---------------------------------------------------------------------
         updateDetail: function (e) {
@@ -137,6 +202,47 @@ export default {
 
 
             this.$Progress.finish();
+        },
+        //---------------------------------------------------------------------
+        isCopiable: function (label) {
+
+            if(
+                label == 'slug'
+            )
+            {
+                return true;
+            }
+
+            return false;
+
+        },
+        //---------------------------------------------------------------------
+        isUpperCase: function (label) {
+
+            if(
+                label == 'id' || label == 'uuid'
+            )
+            {
+                return true;
+            }
+
+            return false;
+
+        },
+        //---------------------------------------------------------------------
+        confirmDelete: function()
+        {
+            let self = this;
+            this.$buefy.dialog.confirm({
+                title: 'Deleting record',
+                message: 'Are you sure you want to <b>delete</b> the record? This action cannot be undone.',
+                confirmText: 'Delete',
+                type: 'is-danger',
+                hasIcon: true,
+                onConfirm: function () {
+                    self.actions('bulk-delete');
+                }
+            })
         },
         //---------------------------------------------------------------------
 

@@ -8,9 +8,9 @@
         <div class="card" v-else>
             <!--header-->
             <header class="card-header">
-                <div v-if="item && item.permission" class="card-header-title">
-                    <span>#{{item.permission.id}} / </span>
-                    <span>{{item.permission.name}}</span>
+                <div v-if="items && items.permission" class="card-header-title">
+                    <span>#{{items.permission.id}} / </span>
+                    <span>{{items.permission.name}}</span>
                 </div>
 
                 <div class="card-header-buttons">
@@ -36,10 +36,10 @@
             <!--content-->
             <div class="card-content">
 
-                <div class="block"  v-if="item && item.list">
+                <div class="block"  v-if="items && items.list">
 
 
-                    <b-table :data="item.list.data"
+                    <b-table :data="items.list.data"
                              :hoverable="true"
                     >
 

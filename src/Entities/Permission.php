@@ -365,6 +365,7 @@ class Permission extends Model {
         }
 
         $response['status'] = 'success';
+        $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
         return $response;
@@ -409,17 +410,49 @@ class Permission extends Model {
 
         foreach($request->inputs as $id)
         {
-            $item = static::find($id);
+            $item = static::where('id', $id)->withTrashed()->first();
             if($item)
             {
-                $item->is_active = null;
-                $item->save();
-                $item->delete();
+
+                $item->forceDelete();
 
             }
         }
 
         $response['status'] = 'success';
+        $response['data'] = [];
+        $response['messages'][] = 'Action was successful';
+
+        return $response;
+
+
+    }
+
+    //-------------------------------------------------
+    public static function bulkTrash($request)
+    {
+
+        if(!$request->has('inputs'))
+        {
+            $response['status'] = 'failed';
+            $response['errors'][] = 'Select IDs';
+            return $response;
+        }
+
+
+        foreach($request->inputs as $id)
+        {
+            $permission = static::withTrashed()->where('id', $id)->first();
+            if($permission)
+            {
+                $permission->is_active = 0;
+                $permission->save();
+                $permission->delete();
+            }
+        }
+
+        $response['status'] = 'success';
+        $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
         return $response;
@@ -454,6 +487,7 @@ class Permission extends Model {
         }
 
         $response['status'] = 'success';
+        $response['data'] = [];
         $response['messages'][] = 'Action was successful';
 
         return $response;

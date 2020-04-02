@@ -215,6 +215,64 @@ class PermissionController extends Controller
 
     //----------------------------------------------------------
     //----------------------------------------------------------
+    public function postActions(Request $request, $action)
+    {
+        $rules = array(
+            'inputs' => 'required',
+        );
+
+        $validator = \Validator::make( $request->all(), $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return response()->json($response);
+        }
+
+        $response = [];
+
+        switch ($action)
+        {
+
+            //------------------------------------
+            case 'bulk-change-status':
+                $response = Permission::bulkStatusChange($request);
+                break;
+            //------------------------------------
+            case 'bulk-trash':
+
+                $response = Permission::bulkTrash($request);
+
+                break;
+            //------------------------------------
+            case 'bulk-restore':
+
+                $response = Permission::bulkRestore($request);
+
+                break;
+
+            //------------------------------------
+            case 'bulk-delete':
+
+                $response = Permission::bulkDelete($request);
+
+                break;
+            //------------------------------------
+            case 'send-verification-mail':
+
+                $response = Permission::sendVerificationEmail($request);
+
+                break;
+            //------------------------------------
+
+        }
+
+        return response()->json($response);
+
+    }
+    //----------------------------------------------------------
+    //----------------------------------------------------------
     //----------------------------------------------------------
 
 
