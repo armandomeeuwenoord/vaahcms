@@ -61,6 +61,12 @@ class PermissionController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
+    public function postStore(Request $request)
+    {
+        $response = Permission::updateDetail($request);
+        return response()->json($response);
+    }
+    //----------------------------------------------------------
     public function getItem(Request $request, $id)
     {
 
@@ -75,10 +81,8 @@ class PermissionController extends Controller
     //----------------------------------------------------------
     public function getList(Request $request)
     {
-
         $response = Permission::getList($request);
         return response()->json($response);
-
     }
     //----------------------------------------------------------
     public function changeStatus(Request $request)
@@ -112,24 +116,21 @@ class PermissionController extends Controller
         {
 
             //------------------------------------
-            case 'bulk_change_status':
+            case 'bulk-change-status':
 
                 $response = Permission::bulkStatusChange($request);
-                $response['messages'][] = 'Action was successful';
 
                 break;
             //------------------------------------
-            case 'bulk_delete':
+            case 'bulk-delete':
 
                 $response = Permission::bulkDelete($request);
-                $response['messages'][] = 'Action was successful';
 
                 break;
             //------------------------------------
-            case 'bulk_restore':
+            case 'bulk-restore':
 
                 $response = Permission::bulkRestore($request);
-                $response['messages'][] = 'Action was successful';
 
                 break;
 
@@ -168,6 +169,7 @@ class PermissionController extends Controller
                 {
                     $item = Permission::find($inputs['inputs']['id']);
                     $item->roles()->updateExistingPivot($inputs['inputs']['role_id'], array('is_active' => $inputs['data']['is_active']));
+                    $item->save();
                     Permission::recountRelations();
                     Role::recountRelations();
                     $response = Permission::getList($request->query_string);

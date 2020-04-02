@@ -9,23 +9,23 @@
             <!--header-->
             <header class="card-header">
 
-                <div v-if="item && item[0]" class="card-header-title">
-                    <span>#{{item[0].value}} / </span>
-                    <span>{{item[1].value}}</span>
+                <div class="card-header-title">
+                    <span>#{{id}} / </span>
+                    <span>{{title}}</span>
                 </div>
 
                 <div class="card-header-buttons">
 
                     <div class="field has-addons is-pulled-right">
-                        <p class="control">
+                        <p v-if="is_editable" class="control">
                             <b-button icon-left="edit"
                                       :loading="is_btn_loading"
-                                      @click="create('save')">
+                                      @click="updateDetail">
                                 Save
                             </b-button>
                         </p>
 
-                        <p class="control">
+                        <p v-if="is_editable" class="control">
 
 
                             <b-dropdown aria-role="list" position="is-bottom-left">
@@ -45,6 +45,12 @@
                             </b-dropdown>
 
 
+                        </p>
+
+                        <p class="control">
+                            <button @click="toogleEdit" class="button" slot="trigger">
+                                <b-icon icon="caret-down"></b-icon>
+                            </button>
                         </p>
 
                         <p class="control">
@@ -68,7 +74,7 @@
             <div class="card-content">
                 <div class="block"  v-if="item">
 
-                    <b-table
+                    <b-table v-if="!is_editable"
                             class="is-full-width"
                             :striped="true"
                             :data="item"
@@ -81,7 +87,43 @@
                             </b-table-column>
 
                             <b-table-column field="description" label="">
-                               :   {{props.row.value}}
+                               : {{props.row.value}}
+                            </b-table-column>
+                        </template>
+                    </b-table>
+
+                    <b-table v-else
+                            class="is-full-width"
+                            :striped="true"
+                            :data="item"
+                            :mobile-cards="true">
+
+                        <template v-if=" props.row.name !== 'Created by' &&
+                                     props.row.name !== 'Id' &&
+                                     props.row.name !== 'Updated by' &&
+                                     props.row.name !== 'Deleted by' &&
+                                     props.row.name !== 'Created at' &&
+                                     props.row.name !== 'Deleted at' &&
+                                     props.row.name !== 'Count users' &&
+                                     props.row.name !== 'Count roles' &&
+                                      props.row.name !== 'Updated at'" slot-scope="props">
+
+                            <b-table-column field="type" label="">
+                                {{props.row.name}}
+                            </b-table-column>
+
+                            <b-table-column v-if="props.row.name === 'Is active'" field="description" label="">
+                                <b-select placeholder="Select a character" v-model="props.row.value" icon="account">
+                                        <option value=1>Yes</option>
+                                        <option value=0>No</option>
+                                </b-select>
+                            </b-table-column>
+
+                            <b-table-column v-else field="description" label="">
+
+                                <b-field>
+                                    <b-input v-model="props.row.value"></b-input>
+                                </b-field>
                             </b-table-column>
                         </template>
                     </b-table>

@@ -17,7 +17,9 @@ export default {
     {
         return {
             is_btn_loading: false,
+            is_editable: false,
             is_content_loading: false,
+            title: null,
         }
     },
     watch: {
@@ -82,6 +84,8 @@ export default {
                 item.name =  item.name.replace('_',' ');
             });
 
+            this.title = data[1].value;
+
             this.$Progress.finish();
             this.is_content_loading = false;
 
@@ -90,6 +94,49 @@ export default {
             {
                 this.update('active_item', data);
             }
+        },
+        //---------------------------------------------------------------------
+        toogleEdit: function () {
+
+            console.log('check',this.is_editable);
+            if(this.is_editable){
+                this.is_editable = false;
+            }else{
+                this.is_editable = true;
+            }
+        },
+        //---------------------------------------------------------------------
+        updateDetail: function (e) {
+
+            if(e){
+                e.preventDefault();
+            }
+
+            console.log(this.item[0].value);
+
+            this.$Progress.start();
+
+            let params = {
+                item: this.item,
+                query_string: this.page.query_string,
+            };
+
+            let url = this.ajax_url+'/store';
+            this.$vaah.ajax(url, params, this.updateDetailAfter);
+        },
+        //---------------------------------------------------------------------
+        updateDetailAfter: function (data,res) {
+
+            if(data){
+                this.update('list', data.list);
+
+                this.is_editable = false;
+
+                this.getItem();
+            }
+
+
+            this.$Progress.finish();
         },
         //---------------------------------------------------------------------
 
