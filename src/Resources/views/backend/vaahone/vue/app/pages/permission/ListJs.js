@@ -165,6 +165,7 @@ export default {
         },
         //---------------------------------------------------------------------
         getList: function () {
+            this.$Progress.start();
             this.$vaah.updateCurrentURL(this.query_string, this.$router);
             let url = this.ajax_url+'/list';
             this.$vaah.ajax(url, this.query_string, this.getListAfter);
@@ -184,21 +185,36 @@ export default {
                 this.update('list_is_empty', false);
             }
 
+            this.page.query_string.recount = null;
+
+            this.update('query_string', this.page.query_string);
+            this.$vaah.updateCurrentURL(this.page.query_string, this.$router);
+
             this.$Progress.finish();
 
         },
         //---------------------------------------------------------------------
         actions: function () {
 
-            if(this.page.bulk_action.selected_items.length < 1)
-            {
-                this.$vaah.toastErrors(['Select a record']);
-                return false;
-            }
+
 
             if(!this.page.bulk_action.action)
             {
                 this.$vaah.toastErrors(['Select an action']);
+                return false;
+            }
+
+            if(this.page.bulk_action.action == 'bulk-change-status'){
+                console.log(123);
+                if(!this.page.bulk_action.data.status){
+                    this.$vaah.toastErrors(['Select a status']);
+                    return false;
+                }
+            }
+
+            if(this.page.bulk_action.selected_items.length < 1)
+            {
+                this.$vaah.toastErrors(['Select a record']);
                 return false;
             }
 
@@ -207,25 +223,30 @@ export default {
             let ids = this.$vaah.pluckFromObject(this.page.bulk_action.selected_items, 'id');
 
             let params = {
+                action: this.page.bulk_action.action,
                 inputs: ids,
                 data: this.page.bulk_action.data
             };
 
             console.log('--->params', params);
 
-            let url = this.ajax_url+'/actions/'+this.page.bulk_action.action;
+            let url = this.ajax_url+'/actions';
             this.$vaah.ajax(url, params, this.actionsAfter);
         },
         //---------------------------------------------------------------------
         actionsAfter: function (data, res) {
-            if(data)
-            {
                 this.resetBulkAction();
                 this.getList();
-            } else
-            {
                 this.$Progress.finish();
-            }
+
+        },
+        //---------------------------------------------------------------------
+        sync: function () {
+
+            this.page.query_string.recount = true;
+
+            this.update('query_string', this.page.query_string);
+            this.getList();
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

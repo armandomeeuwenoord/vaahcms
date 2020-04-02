@@ -3,10 +3,12 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use WebReinvent\VaahCms\Traits\CrudWithUuidObservantTrait;
 
 class Permission extends Model {
 
     use SoftDeletes;
+    use CrudWithUuidObservantTrait;
     //-------------------------------------------------
     protected $table = 'vh_permissions';
     //-------------------------------------------------
@@ -155,23 +157,23 @@ class Permission extends Model {
             Permission::recountRelations();
         }
 
-        if(isset($request->sort_by) && !is_null($request->sort_by))
-        {
-
-            if($request->sort_by == 'deleted_at')
+            if($request['trashed'] == 'true')
             {
-                $list = Permission::onlyTrashed();
+                $list = Permission::withTrashed();
             } else
             {
-                $list = Permission::orderBy($request->sort_by, $request->sort_type);
+                $list = Permission::orderBy('id', 'desc');
             }
 
-        } else
-        {
-            $list = Permission::orderBy('created_at', 'DESC');
-        }
 
-        if(isset($request->sort_by))
+            if($request['status'] == '1')
+            {
+                $list->where('is_active',$request['status']);
+            }elseif($request['status'] == '0'){
+                $list->whereNull('is_active')->orWhere('is_active',$request['status']);
+            }
+
+        if(isset($request->q))
         {
             $list->where(function ($q) use ($request){
                 $q->where('name', 'LIKE', '%'.$request->q.'%')
@@ -179,7 +181,7 @@ class Permission extends Model {
             });
         }
 
-        $data['list'] = $list->paginate(config('vaahcms.per_page'));
+        $data['list'] = $list->paginate(5);
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -357,8 +359,8 @@ class Permission extends Model {
 
         foreach($request->inputs as $id)
         {
-            $reg = Role::find($id);
-            $reg->is_active = $request->data;
+            $reg = static::find($id);
+            $reg->is_active = $request['data']['status'];
             $reg->save();
         }
 
@@ -407,12 +409,13 @@ class Permission extends Model {
 
         foreach($request->inputs as $id)
         {
-            $item = Role::find($id);
+            $item = static::find($id);
             if($item)
             {
                 $item->is_active = null;
                 $item->save();
                 $item->delete();
+
             }
         }
 
@@ -443,7 +446,7 @@ class Permission extends Model {
 
         foreach($request->inputs as $id)
         {
-            $item = Role::withTrashed()->where('id', $id)->first();
+            $item = static::withTrashed()->where('id', $id)->first();
             if(isset($item) && isset($item->deleted_at))
             {
                 $item->restore();
@@ -530,6 +533,79 @@ class Permission extends Model {
                 $item->save();
             }
         }
+
+    }
+    //-------------------------------------------------
+    public static function updateDetail($request)
+    {
+
+        $data = $request->item;
+
+        $input = null;
+
+        foreach($data as $key => $item){
+            $input[$item['name']] = $item['value'];
+        }
+
+
+        $validation = static::validation($input);
+        if(isset($validation['status']) && $validation['status'] == 'failed')
+        {
+            return $validation;
+        }
+
+        $check = static::where('id','!=',$input['Id'])->where('name',$input['Name'])->first();
+
+        if($check){
+            $response['status'] = 'failed';
+            $response['errors'][] = 'Permission is already exist.';
+            return $response;
+        }
+
+        $update = static::where('id',$input['Id'])->first();
+
+        $update->name = $input['Name'];
+        $update->slug = Str::slug($input['Slug']);
+        $update->module = $input['Module'];
+        $update->section = $input['Section'];
+        $update->details = $input['Details'];
+        $update->is_active = $input['Is active'];
+
+        $update->save();
+
+
+        $response = static::getList($request->query_string);
+
+        $response['messages'][] = 'Data updated.';
+
+        return $response;
+
+
+
+    }
+
+    public static function validation($inputs)
+    {
+
+        $rules = array(
+            'Id' => 'required',
+            'Name' => 'required',
+            'Slug' => 'required',
+            'Module' => 'required',
+            'Section' => 'required',
+            'Details' => 'required',
+            'Is active' => 'required',
+        );
+
+        $validator = \Validator::make( $inputs, $rules);
+        if ( $validator->fails() ) {
+
+            $errors             = errorsToArray($validator->errors());
+            $response['status'] = 'failed';
+            $response['errors'] = $errors;
+            return $response;
+        }
+
 
     }
     //-------------------------------------------------

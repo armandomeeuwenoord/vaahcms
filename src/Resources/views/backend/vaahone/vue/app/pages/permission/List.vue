@@ -20,22 +20,15 @@
                         <header class="card-header">
 
                             <div class="card-header-title">
-                                Registrations
+                                Permissions
                             </div>
 
                             <div class="card-header-buttons">
                                 <div class="field has-addons is-pulled-right">
-                                    <p class="control">
-                                        <b-button tag="router-link"
-                                                  :to="{name: 'perm.create'}"
-                                                  icon-left="plus">
-                                            Create
-                                        </b-button>
-                                    </p>
 
                                     <p class="control">
 
-                                        <b-button @click="getList()"
+                                        <b-button @click="sync()"
                                                   icon-left="redo-alt">
                                         </b-button>
 
@@ -81,11 +74,11 @@
                                                     <option value="">
                                                         - Select Status -
                                                     </option>
-                                                    <option
-                                                        v-for="option in page.assets.registration_statuses"
-                                                        :value="option.slug"
-                                                        :key="option.slug">
-                                                        {{ option.name }}
+                                                    <option value=1>
+                                                        - Active -
+                                                    </option>
+                                                    <option value=0>
+                                                        - Not active -
                                                     </option>
                                                 </b-select>
 
@@ -164,11 +157,11 @@
                                                     <option value="">
                                                         - Select a status -
                                                     </option>
-                                                    <option
-                                                        v-for="option in page.assets.registration_statuses"
-                                                        :value="option.slug"
-                                                        :key="option.slug">
-                                                        {{ option.name }}
+                                                    <option value=1>
+                                                        - Active -
+                                                    </option>
+                                                    <option value=0>
+                                                        - Not active -
                                                     </option>
                                                 </b-select>
                                             </b-field>

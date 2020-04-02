@@ -19,48 +19,82 @@
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column field="email" label="Slug">
-                    {{ props.row.slug }}
+                <b-table-column field="slug" label="Slug">
+                    <vh-copy class="text-copyable"
+                             :data="props.row.slug"
+                             :label="icon_copy+' '+props.row.slug"
+                             @copied="copiedData"
+                    >
+                    </vh-copy>
+<!--                    {{ props.row.slug }}-->
                 </b-table-column>
 
-                <b-table-column field="status" label="Is Active">
-                    <b-button v-if="props.row.is_active === 1" rounded size="is-small"
-                              type="is-success" @click="changeStatus(props.row.id)">
-                        Yes
-                    </b-button>
-                    <b-button v-else rounded size="is-small" type="is-danger"
-                              @click="changeStatus(props.row.id)">
-                        No
-                    </b-button>
+                <b-table-column v-if="props.row.deleted_at" field="status" label="Is Active">
+
+                        <b-button v-if="props.row.is_active === 1" rounded size="is-small"
+                                  type="is-success">
+                            Yes
+                        </b-button>
+                        <b-button v-else rounded size="is-small" type="is-danger">
+                            No
+                        </b-button>
+
                 </b-table-column>
 
-                <b-table-column field="created_at" label="Roles" >
-                    <b-button rounded size="is-small"
-                              type="is-primary" @click="getRole(props.row)">
-                        {{ props.row.count_roles }}
-                    </b-button>
+                <b-table-column v-else field="status" label="Is Active">
+                    <b-tooltip label="Change Status" type="is-dark">
+                        <b-button v-if="props.row.is_active === 1" rounded size="is-small"
+                                  type="is-success" @click="changeStatus(props.row.id)">
+                            Yes
+                        </b-button>
+                        <b-button v-else rounded size="is-small" type="is-danger"
+                                  @click="changeStatus(props.row.id)">
+                            No
+                        </b-button>
+                    </b-tooltip>
+                </b-table-column>
+
+                <b-table-column v-if="props.row.deleted_at" field="created_at" label="Roles" >
+                        <b-button rounded size="is-small"
+                                  type="is-primary">
+                            {{ props.row.count_roles }}
+                        </b-button>
+                </b-table-column>
+
+                <b-table-column v-else field="created_at" label="Roles" >
+                    <b-tooltip label="View Role" type="is-dark">
+                        <b-button rounded size="is-small"
+                                  type="is-primary" @click="getRole(props.row)">
+                            {{ props.row.count_roles }}
+                        </b-button>
+                    </b-tooltip>
                 </b-table-column>
 
                 <b-table-column field="gender" label="Users">
                     {{ props.row.count_users }}
                 </b-table-column>
 
-                <b-table-column field="created_at" label="Created At">
-                    {{ $vaah.fromNow(props.row.created_at) }}
+                <b-table-column field="updated_at" label="Updated At">
+                    {{ $vaah.fromNow(props.row.updated_at) }}
                 </b-table-column>
 
 
-                <b-table-column field="actions" label=""
+                <b-table-column v-if="props.row.deleted_at" field="actions" label=""
                                 width="40">
+                        <b-button size="is-small"
+                                  icon-left="chevron-right">
+                        </b-button>
+                </b-table-column>
 
+
+                <b-table-column v-else field="actions" label=""
+                                width="40">
                     <b-tooltip label="View" type="is-dark">
                         <b-button size="is-small"
                                   @click="setActiveItem(props.row)"
                                   icon-left="chevron-right">
                         </b-button>
                     </b-tooltip>
-
-
                 </b-table-column>
 
 
