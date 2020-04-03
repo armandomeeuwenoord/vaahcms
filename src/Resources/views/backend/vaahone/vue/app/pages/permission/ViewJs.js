@@ -21,7 +21,6 @@ export default {
     {
         return {
             is_btn_loading: false,
-            is_editable: false,
             is_content_loading: false,
             title: null,
             labelPosition: 'on-border'
