@@ -117,9 +117,8 @@ export default {
                 e.preventDefault();
             }
 
-            var url = this.ajax_url+"/actions";
+            var url = this.ajax_url+"/actions/"+action;
             var params = {
-                action: action,
                 inputs: inputs,
                 data: data,
             };

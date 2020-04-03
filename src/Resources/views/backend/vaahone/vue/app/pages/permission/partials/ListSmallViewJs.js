@@ -1,3 +1,5 @@
+import VaahVueClickToCopy from 'vaah-vue-clicktocopy'
+
 let namespace = 'permission';
 export default {
     computed: {
@@ -7,7 +9,7 @@ export default {
         query_string() {return this.$store.getters[namespace+'/state'].query_string},
     },
     components:{
-
+        'vh-copy': VaahVueClickToCopy,
     },
 
     data()
@@ -63,6 +65,16 @@ export default {
             this.update('active_item', item);
             this.$router.push({name: 'perm.role', params:{id:item.id}})
         },
+        //---------------------------------------------------------------------
+        copiedData: function (data) {
+
+            this.$vaah.toastSuccess(['copied']);
+
+            // alertify.success('copied');
+
+            this.$vaah.console(data, 'copied data');
+
+        }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
     }

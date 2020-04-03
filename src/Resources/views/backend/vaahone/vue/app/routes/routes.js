@@ -186,7 +186,6 @@ routes.push(routes_reg);
 
 
 import PermList from "./../pages/permission/List";
-import PermCreate from "./../pages/permission/Create";
 import PermView from "./../pages/permission/View";
 import PermRole from "./../pages/permission/ViewRole";
 import PermEdit from "./../pages/permission/Edit";
@@ -214,18 +213,6 @@ let routes_perm =     {
                 ]
             },
             children: [
-                {
-                    path: 'create',
-                    name: 'perm.create',
-                    component: PermCreate,
-                    props: true,
-                    meta: {
-                        middleware: [
-                            IsLoggedIn,
-                            GetBackendAssets
-                        ]
-                    },
-                },
                 {
                     path: 'view/:id',
                     name: 'perm.view',

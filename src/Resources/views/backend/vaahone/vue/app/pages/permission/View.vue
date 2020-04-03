@@ -10,7 +10,7 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>#{{id}} / </span>
+                    <span>#{{id}}&nbsp;/&nbsp;</span>
                     <span>{{title}}</span>
                 </div>
 
@@ -20,7 +20,7 @@
                         <p class="control">
                             <b-button icon-left="edit"
                                       :loading="is_btn_loading"
-                                      @click="create('save')">
+                                      @click="edit('save')">
                                 Edit
                             </b-button>
                         </p>
@@ -88,7 +88,6 @@
             <!--content-->
             <div class="card-content">
                 <div class="block"  v-if="item">
-
 
                     <div class="b-table">
 

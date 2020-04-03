@@ -9,7 +9,7 @@
             <!--header-->
             <header class="card-header">
                 <div v-if="items && items.permission" class="card-header-title">
-                    <span>#{{items.permission.id}} / </span>
+                    <span>#{{items.permission.id}}&nbsp;/&nbsp;</span>
                     <span>{{items.permission.name}}</span>
                 </div>
 

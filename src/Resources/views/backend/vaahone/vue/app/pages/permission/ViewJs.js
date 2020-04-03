@@ -1,6 +1,5 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import TableTrView from '../../vaahvue/reusable/TableTrView'
-import TableTrStatus from './partials/TableTrStatus'
 
 
 let namespace = 'permission';
@@ -16,7 +15,7 @@ export default {
     components:{
         ...GlobalComponents,
         TableTrView,
-        TableTrStatus,
+
     },
     data()
     {
@@ -25,6 +24,7 @@ export default {
             is_editable: false,
             is_content_loading: false,
             title: null,
+            labelPosition: 'on-border'
         }
     },
     watch: {
@@ -131,6 +131,7 @@ export default {
             this.update('bulk_action', this.page.bulk_action);
             let params = {
                 inputs: [this.item.id],
+                query_string: this.page.query_string,
                 data: null
             };
 
@@ -143,6 +144,8 @@ export default {
             let action = this.page.bulk_action.action;
             if(data)
             {
+                this.update('list', data.list);
+
                 this.resetBulkAction();
                 this.$root.$emit('eReloadList');
 
@@ -243,6 +246,13 @@ export default {
                     self.actions('bulk-delete');
                 }
             })
+        },
+        //---------------------------------------------------------------------
+        edit: function()
+        {
+            console.log('check',this.item);
+
+            this.$router.push({name: 'perm.edit', params:{id:this.item.id}})
         },
         //---------------------------------------------------------------------
 

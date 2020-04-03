@@ -419,8 +419,8 @@ class Permission extends Model {
             }
         }
 
-        $response['status'] = 'success';
-        $response['data'] = [];
+        $response = static::getList($request->query_string);
+
         $response['messages'][] = 'Action was successful';
 
         return $response;
@@ -451,8 +451,8 @@ class Permission extends Model {
             }
         }
 
-        $response['status'] = 'success';
-        $response['data'] = [];
+        $response = static::getList($request->query_string);
+
         $response['messages'][] = 'Action was successful';
 
         return $response;
@@ -486,8 +486,8 @@ class Permission extends Model {
             }
         }
 
-        $response['status'] = 'success';
-        $response['data'] = [];
+        $response = static::getList($request->query_string);
+
         $response['messages'][] = 'Action was successful';
 
         return $response;
@@ -573,13 +573,7 @@ class Permission extends Model {
     public static function updateDetail($request)
     {
 
-        $data = $request->item;
-
-        $input = null;
-
-        foreach($data as $key => $item){
-            $input[$item['name']] = $item['value'];
-        }
+        $input = $request->item;
 
 
         $validation = static::validation($input);
@@ -588,7 +582,7 @@ class Permission extends Model {
             return $validation;
         }
 
-        $check = static::where('id','!=',$input['Id'])->where('name',$input['Name'])->first();
+        $check = static::where('id','!=',$input['id'])->where('name',$input['name'])->first();
 
         if($check){
             $response['status'] = 'failed';
@@ -596,14 +590,11 @@ class Permission extends Model {
             return $response;
         }
 
-        $update = static::where('id',$input['Id'])->first();
+        $update = static::where('id',$input['id'])->first();
 
-        $update->name = $input['Name'];
-        $update->slug = Str::slug($input['Slug']);
-        $update->module = $input['Module'];
-        $update->section = $input['Section'];
-        $update->details = $input['Details'];
-        $update->is_active = $input['Is active'];
+        $update->slug = Str::slug($input['slug']);
+        $update->details = $input['details'];
+        $update->is_active = $input['is_active'];
 
         $update->save();
 
@@ -622,16 +613,17 @@ class Permission extends Model {
     {
 
         $rules = array(
-            'Id' => 'required',
-            'Name' => 'required',
-            'Slug' => 'required',
-            'Module' => 'required',
-            'Section' => 'required',
-            'Details' => 'required',
-            'Is active' => 'required',
+            'id' => 'required',
+            'slug' => 'required',
+            'details' => 'required',
+            'is_active' => 'required',
         );
 
-        $validator = \Validator::make( $inputs, $rules);
+        $messages = [
+            'is_active.required' => 'The is active field is required.'
+        ];
+
+        $validator = \Validator::make( $inputs, $rules, $messages);
         if ( $validator->fails() ) {
 
             $errors             = errorsToArray($validator->errors());

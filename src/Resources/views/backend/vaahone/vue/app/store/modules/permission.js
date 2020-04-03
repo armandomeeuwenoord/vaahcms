@@ -39,7 +39,7 @@ export default {
             action: "",
         },
         new_item:{
-            email: null,
+            email: 'abc@gmail.com',
             username: null,
             password: null,
             display_name: null,

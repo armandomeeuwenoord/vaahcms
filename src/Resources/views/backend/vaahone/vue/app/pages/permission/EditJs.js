@@ -1,14 +1,14 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 
-let namespace = 'registrations';
+let namespace = 'permission';
 
 export default {
+    props: ['id'],
     computed:{
         root() {return this.$store.getters['root/state']},
         page() {return this.$store.getters[namespace+'/state']},
         ajax_url() {return this.$store.getters[namespace+'/state'].ajax_url},
-        new_item() {return this.$store.getters[namespace+'/state'].new_item},
-        new_item_errors() {return this.$store.getters[namespace+'/state'].new_item_errors},
+        item() {return this.$store.getters[namespace+'/state'].active_item},
     },
     components:{
         ...GlobalComponents,
@@ -21,6 +21,7 @@ export default {
             is_btn_loading: null,
             labelPosition: 'on-border',
             params: {},
+            status: null,
         }
     },
     watch: {
@@ -32,6 +33,7 @@ export default {
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
+        console.log(this.root.base_url);
 
         //----------------------------------------------------
         //----------------------------------------------------
@@ -62,27 +64,77 @@ export default {
         //---------------------------------------------------------------------
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
+            this.getItem();
+        },//---------------------------------------------------------------------
+        getItem: function () {
+
+            this.$Progress.start();
+            this.is_content_loading = true;
+
+            this.params = {};
+
+            let url = this.ajax_url+'/item/'+this.id;
+            this.$vaah.ajax(url, this.params, this.getItemAfter);
         },
         //---------------------------------------------------------------------
-        create: function (action) {
-            this.is_btn_loading = true;
+        getItemAfter: function (data, res) {
 
-            //  this.$Progress.start();
+            console.log(data);
 
-            this.params = {
-                new_item: this.new_item,
-                action: action
+            let items = {};
+
+            data.forEach(function (item) {
+                    items[item.name] = item.value;
+            });
+
+            this.title = items.name;
+
+            this.$Progress.finish();
+            this.is_content_loading = false;
+
+
+            if(data)
+            {
+                this.update('active_item', items);
+            }
+        },
+        //---------------------------------------------------------------------
+        updateDetail: function (data) {
+
+            this.status = data;
+
+            this.$Progress.start();
+
+            let params = {
+                item: this.item,
+                query_string: this.page.query_string,
             };
 
-            let url = this.ajax_url+'/create';
-            this.$vaah.ajax(url, this.params, this.createAfter);
+            let url = this.ajax_url+'/store';
+            this.$vaah.ajax(url, params, this.updateDetailAfter);
         },
         //---------------------------------------------------------------------
-        createAfter: function (data, res) {
-            this.is_btn_loading = false;
+        updateDetailAfter: function (data,res) {
+
+
+            console.log(data);
+
+            if(data){
+                this.update('list', data.list);
+
+                this.getItem();
+
+                if(this.status == 'close'){
+                    console.log('status11',this.status);
+                    window.location = this.root.base_url+'/backend#/vaah/permission';
+                }else{
+                    window.location = this.root.base_url+'/backend#/vaah/permission/view/'+this.id;
+                }
+
+            }
+
+
             this.$Progress.finish();
-            this.list = data.list;
-            this.update('list', data.list);
         },
         //---------------------------------------------------------------------
 

@@ -91,98 +91,6 @@ class PermissionController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function actions(Request $request)
-    {
-        $rules = array(
-            'action' => 'required',
-            'inputs' => 'required',
-        );
-
-        $validator = \Validator::make( $request->all(), $rules);
-        if ( $validator->fails() ) {
-
-            $errors             = errorsToArray($validator->errors());
-            $response['status'] = 'failed';
-            $response['errors'] = $errors;
-            return response()->json($response);
-        }
-
-        $response['status'] = 'success';
-
-
-        $inputs = $request->all();
-
-        switch ($request->action)
-        {
-
-            //------------------------------------
-            case 'bulk-change-status':
-
-                $response = Permission::bulkStatusChange($request);
-
-                break;
-            //------------------------------------
-            case 'bulk-delete':
-
-                $response = Permission::bulkDelete($request);
-
-                break;
-            //------------------------------------
-            case 'bulk-restore':
-
-                $response = Permission::bulkRestore($request);
-
-                break;
-
-            //------------------------------------
-            case 'delete':
-
-
-                if($response['status'] == 'success')
-                {
-                    $item = Permission::find($inputs['inputs']['id']);
-                    $item->is_active = 0;
-                    $item->save();
-
-                    $item->delete();
-
-                    $response['messages'] = [];
-                }
-
-                break;
-            //------------------------------------
-            case 'change_active_status':
-
-                if($response['status'] == 'success')
-                {
-                    $item = Permission::find($inputs['inputs']['id']);
-                    $item->is_active = $inputs['data']['is_active'];
-                    $item->save();
-                    $response['messages'] = [];
-                }
-
-                break;
-            //------------------------------------
-            case 'toggle_role_active_status':
-
-                if($response['status'] == 'success')
-                {
-                    $item = Permission::find($inputs['inputs']['id']);
-                    $item->roles()->updateExistingPivot($inputs['inputs']['role_id'], array('is_active' => $inputs['data']['is_active']));
-                    $item->save();
-                    Permission::recountRelations();
-                    Role::recountRelations();
-                    $response = Permission::getList($request->query_string);
-                }
-
-                break;
-            //------------------------------------
-
-        }
-
-        return response()->json($response);
-
-    }
     //----------------------------------------------------------
 
     public function getRoles(Request $request, $id)
@@ -232,6 +140,10 @@ class PermissionController extends Controller
 
         $response = [];
 
+        $response['status'] = 'success';
+
+        $inputs = $request->all();
+
         switch ($action)
         {
 
@@ -259,13 +171,20 @@ class PermissionController extends Controller
 
                 break;
             //------------------------------------
-            case 'send-verification-mail':
+            case 'toggle_role_active_status':
 
-                $response = Permission::sendVerificationEmail($request);
+                if($response['status'] == 'success')
+                {
+                    $item = Permission::find($inputs['inputs']['id']);
+                    $item->roles()->updateExistingPivot($inputs['inputs']['role_id'], array('is_active' => $inputs['data']['is_active']));
+                    $item->save();
+                    Permission::recountRelations();
+                    Role::recountRelations();
+                    $response = Permission::getList($request->query_string);
+                }
 
                 break;
             //------------------------------------
-
         }
 
         return response()->json($response);

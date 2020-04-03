@@ -20,7 +20,12 @@
                 </b-table-column>
 
                 <b-table-column field="email" label="Slug">
-                    {{ props.row.slug }}
+                    <vh-copy class="text-copyable"
+                             :data="props.row.slug"
+                             :label="props.row.slug"
+                             @copied="copiedData"
+                    >
+                    </vh-copy>
                 </b-table-column>
 
                 <b-table-column field="created_at" label="Roles" >
