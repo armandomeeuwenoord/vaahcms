@@ -38,7 +38,7 @@ export default {
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
-
+        this.$root.$on('eReloadList', this.getList);
         //----------------------------------------------------
     },
     methods: {
@@ -189,6 +189,7 @@ export default {
 
             this.update('query_string', this.page.query_string);
             this.$vaah.updateCurrentURL(this.page.query_string, this.$router);
+            this.is_btn_loading = false;
 
             this.$Progress.finish();
 
@@ -247,6 +248,8 @@ export default {
         sync: function () {
 
             this.page.query_string.recount = true;
+
+            this.is_btn_loading = true;
 
             this.update('query_string', this.page.query_string);
             this.getList();

@@ -35,31 +35,6 @@ class PermissionController extends Controller
 
         return response()->json($response);
     }
-
-    //----------------------------------------------------------
-    public function index()
-    {
-        return view($this->theme.'.pages.permissions');
-    }
-    //----------------------------------------------------------
-    public function assets(Request $request)
-    {
-
-        $model = new Permission();
-        $data['columns'] = $model->getFormColumns(true);
-        $data['debug'] = config('vaahcms.debug');
-
-        $response['status'] = 'success';
-        $response['data'] = $data;
-
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
-    public function store(Request $request)
-    {
-        $response = Permission::store($request);
-        return response()->json($response);
-    }
     //----------------------------------------------------------
     public function postStore(Request $request)
     {
@@ -70,11 +45,7 @@ class PermissionController extends Controller
     public function getItem(Request $request, $id)
     {
 
-        $item = Permission::where('id', $id)->withTrashed()->first();
-
-        $response['status'] = 'success';
-        $response['data'] = $item->recordForFormElement();
-
+        $response = Permission::getDetail($id);
         return response()->json($response);
 
     }
@@ -85,39 +56,11 @@ class PermissionController extends Controller
         return response()->json($response);
     }
     //----------------------------------------------------------
-    public function changeStatus(Request $request)
-    {
-        $response = Permission::changeStatus($request);
-        return response()->json($response);
-    }
-    //----------------------------------------------------------
     //----------------------------------------------------------
 
     public function getRoles(Request $request, $id)
     {
-        $item = Permission::find($id);
-        $response['data']['permission'] = $item;
-
-
-        if($request->has("q"))
-        {
-            $list = $item->roles()->where(function ($q) use ($request){
-                $q->where('name', 'LIKE', '%'.$request->q.'%')
-                    ->orWhere('slug', 'LIKE', '%'.$request->q.'%');
-            });
-        } else
-        {
-            $list = $item->roles();
-        }
-
-        $list->orderBy('pivot_is_active', 'desc');
-
-        $list = $list->paginate(config('vaahcms.per_page'));
-
-        $response['data']['list'] = $list;
-
-        $response['status'] = 'success';
-
+        $response = Permission::getRoles($request,$id);
         return response()->json($response);
     }
 
@@ -180,7 +123,8 @@ class PermissionController extends Controller
                     $item->save();
                     Permission::recountRelations();
                     Role::recountRelations();
-                    $response = Permission::getList($request->query_string);
+                    $response['status'] = 'success';
+                    $response['data'] = [];
                 }
 
                 break;

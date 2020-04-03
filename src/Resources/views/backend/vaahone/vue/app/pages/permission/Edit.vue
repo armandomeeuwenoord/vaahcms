@@ -2,14 +2,17 @@
 <template>
     <div class="column" v-if="page.assets">
 
-        <div class="card">
+        <div class="block" v-if="is_content_loading">
+            <Loader/>
+        </div>
 
+        <div class="card" v-else>
             <!--header-->
             <header v-if="item" class="card-header">
 
                 <div class="card-header-title">
                     <span>#{{id}}&nbsp;/&nbsp;</span>
-                    <span>{{item.name}}</span>
+                    <span>{{title}}</span>
                 </div>
 
 
@@ -63,20 +66,26 @@
             <div class="card-content">
                 <div class="block" v-if="item">
 
-                    <b-field label="Slug" :label-position="labelPosition">
-                        <b-input v-model="item.slug"></b-input>
+                    <b-field label="Name" :label-position="labelPosition">
+                        <b-input v-model="item.name"></b-input>
                     </b-field>
 
                     <b-field label="Detail" :label-position="labelPosition">
                         <b-input type="textarea" v-model="item.details"></b-input>
                     </b-field>
 
-                    <b-field label="Title" :label-position="labelPosition">
-                        <b-select placeholder="- Select a title -" v-model="item.is_active">
-                            <option value="">- Select a title -</option>
-                            <option value=1>Yes</option>
-                            <option value=0>No</option>
-                        </b-select>
+                    <b-field label="Is Active" :label-position="labelPosition">
+                        <b-radio-button v-model="item.is_active"
+                                        :native-value=1>
+                            <b-icon icon="mars"></b-icon>
+                            <span>Yes</span>
+                        </b-radio-button>
+
+                        <b-radio-button v-model="item.is_active"
+                                        :native-value=0>
+                            <b-icon icon="venus"></b-icon>
+                            <span>No</span>
+                        </b-radio-button>
                     </b-field>
 
                 </div>

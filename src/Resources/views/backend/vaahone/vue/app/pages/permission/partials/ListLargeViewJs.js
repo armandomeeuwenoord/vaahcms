@@ -63,25 +63,18 @@ export default {
         },
         //---------------------------------------------------------------------
         changeStatus: function (id) {
-            console.log('--->', this.page.query_string);
-            let url = this.ajax_url+'/changeStatus';
+            this.$Progress.start();
+            let url = this.ajax_url+'/actions/bulk-change-status';
             let params = {
-                id: id,
-                query_string: this.page.query_string,
+                inputs: [id],
+                data: null
             };
             this.$vaah.ajax(url, params, this.changeStatusAfter);
         },
         //---------------------------------------------------------------------
         changeStatusAfter: function (data,res) {
             this.update('is_list_loading', false);
-            this.update('list', data.list);
-
-            if(data.list.total === 0)
-            {
-                this.update('list_is_empty', true);
-            }else{
-                this.update('list_is_empty', false);
-            }
+            this.$root.$emit('eReloadList');
         },
         //---------------------------------------------------------------------
         getRole: function (item) {

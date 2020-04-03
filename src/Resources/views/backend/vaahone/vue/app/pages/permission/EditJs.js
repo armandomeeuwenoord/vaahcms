@@ -22,6 +22,7 @@ export default {
             labelPosition: 'on-border',
             params: {},
             status: null,
+            title: null,
         }
     },
     watch: {
@@ -79,23 +80,14 @@ export default {
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
 
-            console.log(data);
-
-            let items = {};
-
-            data.forEach(function (item) {
-                    items[item.name] = item.value;
-            });
-
-            this.title = items.name;
-
             this.$Progress.finish();
             this.is_content_loading = false;
 
 
             if(data)
             {
-                this.update('active_item', items);
+                this.title =  data.name;
+                this.update('active_item', data);
             }
         },
         //---------------------------------------------------------------------
@@ -122,12 +114,14 @@ export default {
             if(data){
                 this.update('list', data.list);
 
-                this.getItem();
+                this.$root.$emit('eReloadList');
 
                 if(this.status == 'close'){
-                    console.log('status11',this.status);
+
                     window.location = this.root.base_url+'/backend#/vaah/permission';
                 }else{
+                    this.$root.$emit('eReloadList');
+                    this.$root.$emit('eReloadItem');
                     window.location = this.root.base_url+'/backend#/vaah/permission/view/'+this.id;
                 }
 

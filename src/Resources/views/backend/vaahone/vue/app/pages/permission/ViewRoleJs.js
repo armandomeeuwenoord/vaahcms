@@ -19,6 +19,8 @@ export default {
             is_btn_loading: false,
             is_content_loading: false,
             items: null,
+            search_item:null,
+            search_delay_time: 800,
         }
     },
     watch: {
@@ -69,7 +71,9 @@ export default {
             if(!action){
                 this.is_content_loading = true;
             }
-            this.params = {};
+            this.params = {
+                q:this.search_item,
+            };
 
             let url = this.ajax_url+'/role/'+this.id;
             this.$vaah.ajax(url, this.params, this.getItemAfter);
@@ -129,17 +133,24 @@ export default {
         actionsAfter: function (data,res) {
             this.getItem(true);
             this.update('is_list_loading', false);
-            this.update('list', data.list);
-
-            if(data.list.total === 0)
-            {
-                this.update('list_is_empty', true);
-            }else{
-                this.update('list_is_empty', false);
-            }
+            this.$root.$emit('eReloadList');
         },
         //---------------------------------------------------------------------
 
+        //---------------------------------------------------------------------
+        delayedSearch: function()
+        {
+            this.$Progress.start();
+            let self = this;
+            clearTimeout(this.search_delay);
+            this.search_delay = setTimeout(function() {
+                self.getItem();
+            }, this.search_delay_time);
+
+            // this.query_string.page = 1;
+            // this.update('query_string', this.query_string);
+
+        },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

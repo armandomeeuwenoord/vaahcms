@@ -38,6 +38,17 @@
 
                 <div class="block"  v-if="items && items.list">
 
+                    <b-field>
+                        <b-input placeholder="Search..."
+                                 type="search"
+                                 icon="search"
+                                 @input="delayedSearch"
+                                 @keyup.enter.prevent="delayedSearch"
+                                 v-model="search_item">>
+
+                        </b-input>
+                    </b-field>
+
 
                     <b-table :data="items.list.data"
                              :hoverable="true"

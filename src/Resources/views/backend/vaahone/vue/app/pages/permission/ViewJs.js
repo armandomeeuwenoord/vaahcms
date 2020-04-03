@@ -37,7 +37,7 @@ export default {
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
-
+        this.$root.$on('eReloadItem', this.getItem);
         //----------------------------------------------------
         //----------------------------------------------------
     },
@@ -82,33 +82,30 @@ export default {
         //---------------------------------------------------------------------
         getItemAfter: function (data, res) {
 
-            console.log(data);
-
-            let items = {};
-
-            data.forEach(function (item) {
-
-                if(item.name === 'is_active'){
-                    if(item.value == 1){
-                        items[item.name] = 'Yes';
-                    }else{
-                        items[item.name] = 'No';
-                    }
-                }else{
-                    items[item.name] = item.value;
-                }
-
-            });
-
-            this.title = items.name;
-
             this.$Progress.finish();
             this.is_content_loading = false;
 
 
             if(data)
             {
-                this.update('active_item', items);
+                if(data.is_active == 1){
+                    data.is_active = 'Yes';
+                }else{
+                    data.is_active = 'No';
+                }
+
+                if(data.created_by){
+                    data.created_by = data.created_by.name;
+                }
+
+                if(data.updated_by){
+                    data.updated_by = data.updated_by.name;
+                }
+
+                console.log('123check',data);
+
+                this.title =  data.name;
+                this.update('active_item', data);
             }
         },
         //---------------------------------------------------------------------
@@ -144,8 +141,6 @@ export default {
             let action = this.page.bulk_action.action;
             if(data)
             {
-                this.update('list', data.list);
-
                 this.resetBulkAction();
                 this.$root.$emit('eReloadList');
 

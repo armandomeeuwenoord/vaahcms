@@ -17,7 +17,7 @@
                 <div class="card-header-buttons">
 
                     <div class="field has-addons is-pulled-right">
-                        <p class="control">
+                        <p v-if="!item.deleted_at" class="control">
                             <b-button icon-left="edit"
                                       :loading="is_btn_loading"
                                       @click="edit('save')">
