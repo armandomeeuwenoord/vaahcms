@@ -259,7 +259,7 @@ export default {
         //---------------------------------------------------------------------
         getModuleSection: function () {
 
-            let url = this.ajax_url+'/getSectionList';
+            let url = this.ajax_url+'/getModuleSections';
             this.$vaah.ajax(url, this.query_string, this.getModuleSectionAfter);
         },
         //---------------------------------------------------------------------
