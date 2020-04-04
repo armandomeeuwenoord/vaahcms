@@ -28,7 +28,7 @@
                     </vh-copy>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.status" field="status" label="Is Active">
+                <b-table-column v-if="props.row.deleted_at" field="status" label="Is Active">
 
                         <b-button v-if="props.row.is_active === 1" rounded size="is-small"
                                   type="is-success">
@@ -53,7 +53,7 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.created_at" field="count_roles" label="Roles" >
+                <b-table-column v-if="props.row.deleted_at" field="count_roles" label="Roles" >
                         <b-button rounded size="is-small"
                                   type="is-primary">
                             {{ props.row.count_roles }}
