@@ -28,7 +28,8 @@
 
                                     <p class="control">
 
-                                        <b-button @click="sync()"
+                                        <b-button type="is-light"
+                                                  @click="sync()"
                                                   :loading="is_btn_loading"
                                                   icon-left="redo-alt">
                                         </b-button>

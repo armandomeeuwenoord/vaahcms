@@ -1,5 +1,7 @@
 import GlobalComponents from '../../vaahvue/helpers/GlobalComponents'
 import TableTrView from '../../vaahvue/reusable/TableTrView'
+import TableTrActedBy from '../../vaahvue/reusable/TableTrActedBy'
+import TableTrStatus from './partials/TableTrStatus'
 
 
 let namespace = 'permission';
@@ -15,6 +17,8 @@ export default {
     components:{
         ...GlobalComponents,
         TableTrView,
+        TableTrActedBy,
+        TableTrStatus,
 
     },
     data()
@@ -38,6 +42,7 @@ export default {
         //----------------------------------------------------
         this.$root.$on('eReloadItem', this.getItem);
         //----------------------------------------------------
+        this.is_content_loading = true;
         //----------------------------------------------------
     },
     methods: {
@@ -71,7 +76,6 @@ export default {
         getItem: function () {
 
             this.$Progress.start();
-            this.is_content_loading = true;
 
             this.params = {};
 
@@ -92,16 +96,6 @@ export default {
                 }else{
                     data.is_active = 'No';
                 }
-
-                if(data.created_by){
-                    data.created_by = data.created_by.name;
-                }
-
-                if(data.updated_by){
-                    data.updated_by = data.updated_by.name;
-                }
-
-                console.log('123check',data);
 
                 this.title =  data.name;
                 this.update('active_item', data);

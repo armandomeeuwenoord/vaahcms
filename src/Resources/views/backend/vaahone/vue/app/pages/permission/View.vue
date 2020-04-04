@@ -1,6 +1,7 @@
 <script src="./ViewJs.js"></script>
 <template>
     <div class="column" v-if="page.assets">
+
         <div class="block" v-if="is_content_loading">
             <Loader/>
         </div>
@@ -10,15 +11,24 @@
             <header class="card-header">
 
                 <div class="card-header-title">
-                    <span>#{{id}}&nbsp;/&nbsp;</span>
                     <span>{{title}}</span>
                 </div>
 
                 <div class="card-header-buttons">
 
                     <div class="field has-addons is-pulled-right">
-                        <p v-if="!item.deleted_at" class="control">
+                        <p class="control">
+                            <b-button type="is-light">
+                                <vh-copy
+                                        :data="item.id"
+                                        :confirm_dialog="'buefy'">
+                                    <small><b>#{{item.id}}</b></small>
+                                </vh-copy>
+                            </b-button>
+                        </p>
+                        <p class="control">
                             <b-button icon-left="edit"
+                                      type="is-light"
                                       :loading="is_btn_loading"
                                       @click="edit('save')">
                                 Edit
@@ -29,7 +39,7 @@
 
 
                             <b-dropdown v-if="item" aria-role="list" position="is-bottom-left">
-                                <button class="button" slot="trigger">
+                                <button class="button is-light" slot="trigger">
                                     <b-icon icon="caret-down"></b-icon>
                                 </button>
 
@@ -61,7 +71,7 @@
                         </p>
 
                         <p class="control">
-                            <b-button
+                            <b-button type="is-light"
                                       @click="exit()"
                                       icon-left="times">
                             </b-button>
@@ -98,7 +108,32 @@
 
                                 <template v-for="(value, label) in item">
 
-                                    <template>
+                                    <template v-if="label == 'created_by'">
+                                        <TableTrActedBy :value="item['created_by_user']"
+                                                        :label="label"/>
+                                    </template>
+
+                                    <template v-else-if="label == 'updated_by'">
+                                        <TableTrActedBy :value="item['updated_by_user']"
+                                                        :label="label"/>
+                                    </template>
+
+                                    <template v-else-if="label == 'deleted_by'">
+                                        <TableTrActedBy :value="item['deleted_by_user']"
+                                                        :label="label"/>
+                                    </template>
+
+                                    <template v-else-if="label == 'is_active'">
+                                        <TableTrStatus :value="value"
+                                                        :label="label"/>
+                                    </template>
+
+                                    <template v-else-if="label == 'created_by_user'
+                                      || label == 'updated_by_user' || label == 'deleted_by_user'">
+
+                                    </template>
+
+                                    <template v-else>
                                         <TableTrView :value="value"
                                                      :label="label"
                                                      :is_copiable="isCopiable(label)"
@@ -116,64 +151,6 @@
                         </div>
 
                     </div>
-
-
-
-<!--                    <b-table v-if="!is_editable"-->
-<!--                            class="is-full-width"-->
-<!--                            :striped="true"-->
-<!--                            :data="item"-->
-<!--                            :mobile-cards="true">-->
-
-<!--                        <template slot-scope="props">-->
-
-<!--                            <b-table-column field="type" label="">-->
-<!--                                {{props.row.name}}-->
-<!--                            </b-table-column>-->
-
-<!--                            <b-table-column field="description" label="">-->
-<!--                               : {{props.row.value}}-->
-<!--                            </b-table-column>-->
-<!--                        </template>-->
-<!--                    </b-table>-->
-
-<!--                    <b-table v-else-->
-<!--                            class="is-full-width"-->
-<!--                            :striped="true"-->
-<!--                            :data="item"-->
-<!--                            :mobile-cards="true">-->
-
-<!--                        <template v-if=" props.row.name !== 'Created by' &&-->
-<!--                                     props.row.name !== 'Id' &&-->
-<!--                                     props.row.name !== 'Updated by' &&-->
-<!--                                     props.row.name !== 'Deleted by' &&-->
-<!--                                     props.row.name !== 'Created at' &&-->
-<!--                                     props.row.name !== 'Deleted at' &&-->
-<!--                                     props.row.name !== 'Count users' &&-->
-<!--                                     props.row.name !== 'Count roles' &&-->
-<!--                                      props.row.name !== 'Updated at'" slot-scope="props">-->
-
-<!--                            <b-table-column field="type" label="">-->
-<!--                                {{props.row.name}}-->
-<!--                            </b-table-column>-->
-
-<!--                            <b-table-column v-if="props.row.name === 'Is active'" field="description" label="">-->
-<!--                                <b-select placeholder="Select a character" v-model="props.row.value" icon="account">-->
-<!--                                        <option value=1>Yes</option>-->
-<!--                                        <option value=0>No</option>-->
-<!--                                </b-select>-->
-<!--                            </b-table-column>-->
-
-<!--                            <b-table-column v-else field="description" label="">-->
-
-<!--                                <b-field>-->
-<!--                                    <b-input v-model="props.row.value"></b-input>-->
-<!--                                </b-field>-->
-<!--                            </b-table-column>-->
-<!--                        </template>-->
-<!--                    </b-table>-->
-
-
 
                 </div>
             </div>

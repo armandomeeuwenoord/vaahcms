@@ -141,7 +141,7 @@ export default {
             this.page.bulk_action = {
                 selected_items: [],
                 data: {},
-                action: "",
+                action: null,
             };
             this.update('bulk_action', this.page.bulk_action);
         },
@@ -275,6 +275,9 @@ export default {
             this.getModuleSection();
 
             this.getList();
+
+            this.query_string.page = 1;
+            this.update('query_string', this.query_string);
 
             console.log('check-status',this.page.assets.module.some(item => item.module === this.query_string.filter));
         },

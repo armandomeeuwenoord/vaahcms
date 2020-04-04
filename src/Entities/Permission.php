@@ -42,22 +42,27 @@ class Permission extends Model {
     //-------------------------------------------------
     //-------------------------------------------------
     //-------------------------------------------------
-    public function createdBy() {
-        return $this->belongsTo( 'WebReinvent\VaahCms\Entities\User',
+    public function createdByUser()
+    {
+        return $this->belongsTo('WebReinvent\VaahCms\Entities\User',
             'created_by', 'id'
-        );
+        )->select('id', 'uid', 'first_name', 'last_name', 'email');
     }
+
     //-------------------------------------------------
-    public function updatedBy() {
-        return $this->belongsTo( 'WebReinvent\VaahCms\Entities\User',
+    public function updatedByUser()
+    {
+        return $this->belongsTo('WebReinvent\VaahCms\Entities\User',
             'updated_by', 'id'
-        );
+        )->select('id', 'uid', 'first_name', 'last_name', 'email');
     }
+
     //-------------------------------------------------
-    public function deletedBy() {
-        return $this->belongsTo( 'WebReinvent\VaahCms\Entities\User',
+    public function deletedByUser()
+    {
+        return $this->belongsTo('WebReinvent\VaahCms\Entities\User',
             'deleted_by', 'id'
-        );
+        )->select('id', 'uid', 'first_name', 'last_name', 'email');
     }
     //-------------------------------------------------
     public function roles() {
@@ -77,7 +82,7 @@ class Permission extends Model {
 
         if($request['trashed'] == 'true')
         {
-            $list = Permission::withTrashed();
+            $list = Permission::withTrashed()->orderBy('id', 'desc');
         } else
         {
             $list = Permission::orderBy('id', 'desc');
@@ -108,7 +113,7 @@ class Permission extends Model {
             });
         }
 
-        $data['list'] = $list->paginate(5);
+        $data['list'] = $list->paginate(2);
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -348,15 +353,7 @@ class Permission extends Model {
             return $validation;
         }
 
-        $check = static::where('id','!=',$input['id'])->where('name',$input['name'])->first();
-
-        if($check){
-            $response['status'] = 'failed';
-            $response['errors'][] = 'Permission is already exist.';
-            return $response;
-        }
-
-        $update = static::where('id',$input['id'])->first();
+        $update = static::where('id',$input['id'])->withTrashed()->first();
 
         $update->name = $input['name'];
         $update->details = $input['details'];
@@ -439,7 +436,8 @@ class Permission extends Model {
     public static function getDetail($id)
     {
 
-        $item = Permission::where('id', $id)->with('createdBy','updatedBy')->withTrashed()->first();
+        $item = Permission::where('id', $id)->with(['createdByUser', 'updatedByUser', 'deletedByUser'])
+            ->withTrashed()->first();
 
         $response['status'] = 'success';
         $response['data'] = $item;

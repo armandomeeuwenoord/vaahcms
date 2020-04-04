@@ -1,6 +1,7 @@
 <script src="./ViewRoleJs.js"></script>
 <template>
     <div class="column" v-if="page.assets">
+
         <div class="block" v-if="is_content_loading">
             <Loader/>
         </div>
@@ -9,7 +10,6 @@
             <!--header-->
             <header class="card-header">
                 <div v-if="items && items.permission" class="card-header-title">
-                    <span>#{{items.permission.id}}&nbsp;/&nbsp;</span>
                     <span>{{items.permission.name}}</span>
                 </div>
 
@@ -17,7 +17,16 @@
 
                     <div class="field has-addons is-pulled-right">
                         <p class="control">
-                            <b-button
+                            <b-button type="is-light">
+                                <vh-copy
+                                        :data="item.id"
+                                        :confirm_dialog="'buefy'">
+                                    <small><b>#{{item.id}}</b></small>
+                                </vh-copy>
+                            </b-button>
+                        </p>
+                        <p class="control">
+                            <b-button type="is-light"
                                     @click="exit()"
                                     icon-left="times">
                             </b-button>
@@ -39,7 +48,7 @@
                 <div class="block"  v-if="items && items.list">
 
                     <b-field>
-                        <b-input placeholder="Search..."
+                        <b-input placeholder="Search Roles"
                                  type="search"
                                  icon="search"
                                  @input="delayedSearch"

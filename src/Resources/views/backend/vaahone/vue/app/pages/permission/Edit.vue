@@ -11,7 +11,6 @@
             <header v-if="item" class="card-header">
 
                 <div class="card-header-title">
-                    <span>#{{id}}&nbsp;/&nbsp;</span>
                     <span>{{title}}</span>
                 </div>
 
@@ -20,7 +19,17 @@
 
                     <div class="field has-addons is-pulled-right">
                         <p class="control">
-                            <b-button icon-left="edit"
+                            <b-button type="is-light">
+                                <vh-copy
+                                        :data="item.id"
+                                        :confirm_dialog="'buefy'">
+                                    <small><b>#{{item.id}}</b></small>
+                                </vh-copy>
+                            </b-button>
+                        </p>
+                        <p class="control">
+                            <b-button type="is-light"
+                                      icon-left="edit"
                                       :loading="is_btn_loading"
                                       @click="updateDetail('save')">
                                 Save
@@ -31,7 +40,7 @@
 
 
                             <b-dropdown aria-role="list" position="is-bottom-left">
-                                <button class="button" slot="trigger">
+                                <button class="button is-light" slot="trigger">
                                     <b-icon icon="caret-down"></b-icon>
                                 </button>
 
@@ -46,8 +55,8 @@
                         </p>
 
                         <p class="control">
-                            <b-button tag="router-link"
-                                      :to="{name: 'perm.list'}"
+                            <b-button type="is-light"
+                                      @click="exit()"
                                       icon-left="times">
                             </b-button>
                         </p>
