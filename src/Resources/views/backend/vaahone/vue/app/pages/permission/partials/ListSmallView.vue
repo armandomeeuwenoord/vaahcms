@@ -19,7 +19,7 @@
                     {{ props.row.name }}
                 </b-table-column>
 
-                <b-table-column field="email" label="Slug">
+                <b-table-column field="slug" label="Slug">
                     <vh-copy class="text-copyable"
                              :data="props.row.slug"
                              :label="props.row.slug"
@@ -28,7 +28,7 @@
                     </vh-copy>
                 </b-table-column>
 
-                <b-table-column field="created_at" label="Roles" >
+                <b-table-column field="count_roles" label="Roles" >
                     <b-button rounded size="is-small"
                               type="is-primary" @click="getRole(props.row)">
                         {{ props.row.count_roles }}
@@ -38,7 +38,6 @@
 
                 <b-table-column field="actions" label=""
                                 width="40">
-
                     <b-tooltip label="View" type="is-dark">
                         <b-button size="is-small"
                                   @click="setActiveItem(props.row)"

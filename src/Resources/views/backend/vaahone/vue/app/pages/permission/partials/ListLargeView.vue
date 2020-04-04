@@ -26,10 +26,9 @@
                              @copied="copiedData"
                     >
                     </vh-copy>
-<!--                    {{ props.row.slug }}-->
                 </b-table-column>
 
-                <b-table-column v-if="props.row.deleted_at" field="status" label="Is Active">
+                <b-table-column v-if="props.row.status" field="status" label="Is Active">
 
                         <b-button v-if="props.row.is_active === 1" rounded size="is-small"
                                   type="is-success">
@@ -54,14 +53,14 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.deleted_at" field="created_at" label="Roles" >
+                <b-table-column v-if="props.row.count_roles" field="created_at" label="Roles" >
                         <b-button rounded size="is-small"
                                   type="is-primary">
                             {{ props.row.count_roles }}
                         </b-button>
                 </b-table-column>
 
-                <b-table-column v-else field="created_at" label="Roles" >
+                <b-table-column v-else field="count_roles" label="Roles" >
                     <b-tooltip label="View Role" type="is-dark">
                         <b-button rounded size="is-small"
                                   type="is-primary" @click="getRole(props.row)">
@@ -70,13 +69,13 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column field="gender" label="Users">
+                <b-table-column field="count_users" label="Users">
                     {{ props.row.count_users }}
                 </b-table-column>
 
                 <b-table-column field="updated_at" label="Updated At">
                     {{ $vaah.fromNow(props.row.updated_at) }}
-                </b-table-column
+                </b-table-column>
 
 
                 <b-table-column field="actions" label=""
