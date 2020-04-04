@@ -53,7 +53,7 @@
                     </b-tooltip>
                 </b-table-column>
 
-                <b-table-column v-if="props.row.count_roles" field="created_at" label="Roles" >
+                <b-table-column v-if="props.row.created_at" field="count_roles" label="Roles" >
                         <b-button rounded size="is-small"
                                   type="is-primary">
                             {{ props.row.count_roles }}
@@ -70,7 +70,11 @@
                 </b-table-column>
 
                 <b-table-column field="count_users" label="Users">
-                    {{ props.row.count_users }}
+                    <b-button rounded size="is-small"
+                              type="is-light">
+                        {{ props.row.count_users }}
+                    </b-button>
+
                 </b-table-column>
 
                 <b-table-column field="updated_at" label="Updated At">
