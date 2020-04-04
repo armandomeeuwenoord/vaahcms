@@ -111,17 +111,15 @@ export default {
             console.log(data);
 
             if(data){
-                this.update('list', data.list);
 
                 this.$root.$emit('eReloadList');
 
                 if(this.status == 'close'){
-
-                    window.location = this.root.base_url+'/backend#/vaah/permission';
+                    this.update('active_item',null);
+                    this.$router.push({name: 'perm.list'});
                 }else{
-                    this.$root.$emit('eReloadList');
                     this.$root.$emit('eReloadItem');
-                    window.location = this.root.base_url+'/backend#/vaah/permission/view/'+this.id;
+                    this.$router.push({name: 'perm.view', params:{id:this.id}});
                 }
 
             }

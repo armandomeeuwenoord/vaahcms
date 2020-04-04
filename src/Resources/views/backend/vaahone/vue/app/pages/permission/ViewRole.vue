@@ -17,9 +17,9 @@
 
                     <div class="field has-addons is-pulled-right">
                         <p class="control">
-                            <b-button tag="router-link"
-                                      :to="{name: 'perm.list'}"
-                                      icon-left="times">
+                            <b-button
+                                    @click="exit()"
+                                    icon-left="times">
                             </b-button>
                         </p>
 

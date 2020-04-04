@@ -409,4 +409,7 @@ Route::group(
         Route::post('/actions/{action_name}', 'PermissionController@postActions')
             ->name('backend.vaah.registrations.actions');
         //---------------------------------------------------------
+        Route::post('/getSectionList', 'PermissionController@getModuleSections')
+            ->name('backend.vaah.registrations.module-section');
+        //---------------------------------------------------------
     });

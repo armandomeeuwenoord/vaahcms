@@ -33,7 +33,7 @@ export default {
         //----------------------------------------------------
         this.onLoad();
         //----------------------------------------------------
-
+        this.is_content_loading = true;
         //----------------------------------------------------
         //----------------------------------------------------
     },
@@ -68,9 +68,6 @@ export default {
         getItem: function (action = false) {
 
             this.$Progress.start();
-            if(!action){
-                this.is_content_loading = true;
-            }
             this.params = {
                 q:this.search_item,
             };
@@ -150,6 +147,13 @@ export default {
             // this.query_string.page = 1;
             // this.update('query_string', this.query_string);
 
+        },
+        //---------------------------------------------------------------------
+        exit: function()
+        {
+            this.update('active_item',null);
+
+            this.$router.push({name: 'perm.list'})
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

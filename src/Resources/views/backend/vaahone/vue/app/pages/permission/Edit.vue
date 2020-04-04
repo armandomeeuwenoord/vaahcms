@@ -78,14 +78,12 @@
                         <b-radio-button name="permission-is_active" dusk="permission-is_active"
                                         v-model="item.is_active"
                                         :native-value=1>
-                            <b-icon icon="mars"></b-icon>
                             <span>Yes</span>
                         </b-radio-button>
 
-                        <b-radio-button name="permission-is_active" dusk="permission-is_active"
+                        <b-radio-button type="is-danger" name="permission-is_active" dusk="permission-is_active"
                                         v-model="item.is_active"
                                         :native-value=0>
-                            <b-icon icon="venus"></b-icon>
                             <span>No</span>
                         </b-radio-button>
                     </b-field>

@@ -61,8 +61,8 @@
                         </p>
 
                         <p class="control">
-                            <b-button tag="router-link"
-                                      :to="{name: 'perm.list'}"
+                            <b-button
+                                      @click="exit()"
                                       icon-left="times">
                             </b-button>
                         </p>

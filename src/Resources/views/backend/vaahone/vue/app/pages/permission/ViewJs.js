@@ -204,7 +204,7 @@ export default {
         isCopiable: function (label) {
 
             if(
-                label == 'slug'
+                label == 'id' || label == 'uuid' || label == 'slug'
             )
             {
                 return true;
@@ -247,6 +247,13 @@ export default {
             console.log('check',this.item);
 
             this.$router.push({name: 'perm.edit', params:{id:this.item.id}})
+        },
+        //---------------------------------------------------------------------
+        exit: function()
+        {
+            this.update('active_item',null);
+
+            this.$router.push({name: 'perm.list'})
         },
         //---------------------------------------------------------------------
 

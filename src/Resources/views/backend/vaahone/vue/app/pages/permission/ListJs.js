@@ -25,7 +25,8 @@ export default {
             is_btn_loading: false,
             search_delay: null,
             search_delay_time: 800,
-            ids: []
+            ids: [],
+            moduleSection: null,
         }
     },
     watch: {
@@ -82,6 +83,7 @@ export default {
         async getAssets() {
             await this.$store.dispatch(namespace+'/getAssets');
             this.getList();
+            this.getModuleSection();
         },
         //---------------------------------------------------------------------
         toggleFilters: function()
@@ -253,6 +255,28 @@ export default {
 
             this.update('query_string', this.page.query_string);
             this.getList();
+        },
+        //---------------------------------------------------------------------
+        getModuleSection: function () {
+
+            let url = this.ajax_url+'/getSectionList';
+            this.$vaah.ajax(url, this.query_string, this.getModuleSectionAfter);
+        },
+        //---------------------------------------------------------------------
+        getModuleSectionAfter: function (data,res) {
+
+            this.moduleSection = data;
+        },
+        //---------------------------------------------------------------------
+        setFilter: function () {
+
+            this.query_string.section = '';
+
+            this.getModuleSection();
+
+            this.getList();
+
+            console.log('check-status',this.page.assets.module.some(item => item.module === this.query_string.filter));
         },
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

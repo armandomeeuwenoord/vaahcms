@@ -31,7 +31,7 @@ export default {
             page: 1,
             q: null,
             trashed: null,
-            status: null,
+            filter: null,
         },
         bulk_action:{
             selected_items: [],

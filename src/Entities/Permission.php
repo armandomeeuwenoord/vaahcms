@@ -75,21 +75,30 @@ class Permission extends Model {
             Permission::recountRelations();
         }
 
-            if($request['trashed'] == 'true')
-            {
-                $list = Permission::withTrashed();
-            } else
-            {
-                $list = Permission::orderBy('id', 'desc');
-            }
+        if($request['trashed'] == 'true')
+        {
+            $list = Permission::withTrashed();
+        } else
+        {
+            $list = Permission::orderBy('id', 'desc');
+        }
 
-
-            if($request['status'] == '1')
+        if(isset($request['filter']) &&  $request['filter'])
+        {
+            if($request['filter'] == '1')
             {
-                $list->where('is_active',$request['status']);
-            }elseif($request['status'] == '0'){
-                $list->whereNull('is_active')->orWhere('is_active',$request['status']);
+                $list->where('is_active',$request['filter']);
+            }elseif($request['filter'] == '10'){
+                $list->whereNull('is_active')->orWhere('is_active',0);
+            }else{
+                if(isset($request['section']) &&  $request['section']){
+                    $list->where('module',$request['filter'])->where('section',$request['section']);
+                }else{
+                    $list->where('module',$request['filter']);
+                }
+
             }
+        }
 
         if(isset($request->q))
         {
@@ -431,6 +440,33 @@ class Permission extends Model {
     {
 
         $item = Permission::where('id', $id)->with('createdBy','updatedBy')->withTrashed()->first();
+
+        $response['status'] = 'success';
+        $response['data'] = $item;
+
+        return $response;
+
+
+    }
+
+    //-------------------------------------------------
+
+    public static function getModuleList()
+    {
+
+        $item = Permission::withTrashed()->select('module')->get()->unique('module');
+
+        return $item;
+
+
+    }
+
+    //-------------------------------------------------
+
+    public static function getModuleSections($request)
+    {
+
+        $item = Permission::where('module',$request->filter)->withTrashed()->select('section')->get()->unique('section');
 
         $response['status'] = 'success';
         $response['data'] = $item;

@@ -73,8 +73,9 @@ export default {
         },
         //---------------------------------------------------------------------
         changeStatusAfter: function (data,res) {
-            this.update('is_list_loading', false);
             this.$root.$emit('eReloadList');
+            this.update('is_list_loading', false);
+
         },
         //---------------------------------------------------------------------
         getRole: function (item) {

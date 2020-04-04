@@ -69,11 +69,11 @@
                                                     </option>
                                                 </b-select>
 
-                                                <b-select placeholder="- Select Status -"
+                                                <b-select placeholder="- Select a status -"
                                                           v-if="page.bulk_action.action == 'bulk-change-status'"
                                                           v-model="page.bulk_action.data.status">
                                                     <option value="">
-                                                        - Select Status -
+                                                        - Select a status -
                                                     </option>
                                                     <option value=1>
                                                         Active
@@ -150,22 +150,71 @@
 
                                         <div class="level-item">
 
+
+
                                             <b-field label="">
-                                                <b-select placeholder="- Select a status -"
-                                                          v-model="query_string.status"
-                                                          @input="getList()"
-                                                >
+                                                <b-select placeholder="- Select a filter -"
+                                                          v-model="query_string.filter"
+                                                          @input="setFilter()">
                                                     <option value="">
-                                                        - Select a status -
+                                                        - Select a filter -
                                                     </option>
-                                                    <option value=1>
-                                                        Active
+                                                    <optgroup label="Status">
+                                                        <option value=01>
+                                                            Active
+                                                        </option>
+                                                        <option value=10>
+                                                            Not active
+                                                        </option>
+                                                    </optgroup>
+
+                                                    <optgroup label="Module">
+                                                        <option
+                                                                v-for="option in page.assets.module"
+                                                                :value="option.module"
+                                                                :key="option.module">
+                                                            {{  option.module.charAt(0).toUpperCase() + option.module.slice(1) }}
+                                                        </option>
+                                                    </optgroup>
+                                                </b-select>
+
+                                                <b-select placeholder="- Select a section -"
+                                                          v-if="page.assets.module.some(item => item.module === query_string.filter)"
+                                                          v-model="query_string.section"
+                                                          @input="getList()">
+                                                    <option value="">
+                                                        - Select a section -
                                                     </option>
-                                                    <option value=0>
-                                                        Not active
+                                                    <option
+                                                            v-for="option in moduleSection"
+                                                            :value="option.section"
+                                                            :key="option.section">
+                                                        {{  option.section.charAt(0).toUpperCase() + option.section.slice(1) }}
                                                     </option>
                                                 </b-select>
+
                                             </b-field>
+
+
+
+
+
+<!--                                            <b-field label="">-->
+<!--                                                <b-select placeholder="- Select a status -"-->
+<!--                                                          v-model="query_string.filter"-->
+<!--                                                          @input="getList()"-->
+<!--                                                >-->
+<!--                                                    <option value="">-->
+<!--                                                        - Select a status - -->
+<!--                                                    </option>-->
+<!--                                                    <option value=1>-->
+<!--                                                        Active-->
+<!--                                                    </option>-->
+<!--                                                    <option value=0>-->
+<!--                                                        Not active-->
+<!--                                                    </option>-->
+<!--                                                </b-select>-->
+<!--                                            </b-field>-->
 
 
                                         </div>

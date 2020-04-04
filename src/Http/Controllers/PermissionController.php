@@ -22,6 +22,7 @@ class PermissionController extends Controller
 
     public function getAssets(Request $request)
     {
+        $module = Permission::getModuleList();
 
         $data['country_calling_code'] = vh_get_country_list();
         $data['country'] = vh_get_country_list();
@@ -29,6 +30,7 @@ class PermissionController extends Controller
         $data['registration_statuses'] = vh_registration_statuses();
         $data['bulk_actions'] = vh_general_bulk_actions();
         $data['name_titles'] = vh_name_titles();
+        $data['module'] = $module;
 
         $response['status'] = 'success';
         $response['data'] = $data;
@@ -61,6 +63,13 @@ class PermissionController extends Controller
     public function getRoles(Request $request, $id)
     {
         $response = Permission::getRoles($request,$id);
+        return response()->json($response);
+    }
+    //----------------------------------------------------------
+
+    public function getModuleSections(Request $request)
+    {
+        $response = Permission::getModuleSections($request);
         return response()->json($response);
     }
 
