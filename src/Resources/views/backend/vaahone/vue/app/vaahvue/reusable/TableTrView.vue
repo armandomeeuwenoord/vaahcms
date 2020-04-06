@@ -1,7 +1,19 @@
 <template>
 
 
-    <tr>
+    <tr v-if="label == 'created_at' || label == 'updated_at' || label == 'deleted_at'">
+        <th width="130" align="right">{{toLabel(label)}}</th>
+        <td colspan="2">
+            <span v-if="value">
+                {{value}}
+                <small>
+                    / {{$vaah.fromNow(value)}}
+                </small>
+            </span>
+        </td>
+
+    </tr>
+    <tr v-else>
         <th width="130" align="right">{{toLabel(label)}}</th>
         <td>{{value}}</td>
         <td width="20">
